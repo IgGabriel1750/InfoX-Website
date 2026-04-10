@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
 
@@ -58,8 +58,8 @@
       </div>
 
       <div class="reveal">
-        <a href="https://t.me/studentinfoxhub" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
-          <i class="fa-brands fa-telegram"></i> Join the Telegram →
+        <a href="#community-forms" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-user-plus"></i> Fill the Join Form →
         </a>
       </div>
 
@@ -84,7 +84,7 @@
   </section>
 
   <!-- ===================== FORMS SECTION ===================== -->
-  <section class="bg-surface-alt">
+  <section class="bg-surface-alt" id="community-forms">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Community forms</span>
@@ -92,22 +92,40 @@
         <p>Whatever stage you're at (arriving, already here, or ready to give back), there's a form for that. All reviewed manually, usually within 24 hours.</p>
       </div>
 
-      <div class="form-block reveal">
-        <h3>Joining / Intake Form</h3>
-        <p class="desc">Tell us about your move so we can connect you to the right support.</p>
-        <iframe src="https://tally.so/embed/mVRK1v?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="520" frameborder="0" title="Joining / Intake Form" style="border-radius:12px;"></iframe>
+      <!-- Tabbed form interface -->
+      <div class="form-tabs reveal" role="tablist" aria-label="Community forms">
+        <button class="form-tab active" role="tab" aria-selected="true" aria-controls="tab-join" data-tab="tab-join">
+          <i class="fa-solid fa-user-plus"></i> Join Community
+        </button>
+        <button class="form-tab" role="tab" aria-selected="false" aria-controls="tab-ambassador" data-tab="tab-ambassador">
+          <i class="fa-solid fa-star"></i> Ambassador Application
+        </button>
+        <button class="form-tab" role="tab" aria-selected="false" aria-controls="tab-flatmate" data-tab="tab-flatmate">
+          <i class="fa-solid fa-people-roof"></i> Flatmate Pairing
+        </button>
       </div>
 
-      <div class="form-block reveal">
-        <h3>Ambassador Application</h3>
-        <p class="desc">Apply to become a Student InfoX ambassador in your city.</p>
-        <iframe src="https://tally.so/embed/PdlDW0?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="520" frameborder="0" title="Ambassador Application" style="border-radius:12px;"></iframe>
-      </div>
+      <div class="form-tab-panels reveal">
+        <div class="form-tab-panel active" id="tab-join" role="tabpanel">
+          <p class="desc">Tell us about your move so we can connect you to the right support.</p>
+          <div class="tally-wrap">
+            <iframe data-src="https://tally.so/embed/mVRK1v?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="720" frameborder="0" title="Joining / Intake Form"></iframe>
+          </div>
+        </div>
 
-      <div class="form-block reveal">
-        <h3>Flatmate Pairing Form</h3>
-        <p class="desc">Looking for a flatmate? We'll match you with students near your university.</p>
-        <iframe src="https://tally.so/embed/Gx0ooo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="520" frameborder="0" title="Flatmate Pairing Form" style="border-radius:12px;"></iframe>
+        <div class="form-tab-panel" id="tab-ambassador" role="tabpanel" hidden>
+          <p class="desc">Apply to become a Student InfoX ambassador in your city.</p>
+          <div class="tally-wrap">
+            <iframe data-src="https://tally.so/embed/PdlDW0?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="720" frameborder="0" title="Ambassador Application"></iframe>
+          </div>
+        </div>
+
+        <div class="form-tab-panel" id="tab-flatmate" role="tabpanel" hidden>
+          <p class="desc">Looking for a flatmate? We'll match you with students near your university.</p>
+          <div class="tally-wrap">
+            <iframe data-src="https://tally.so/embed/Gx0ooo?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" width="100%" height="720" frameborder="0" title="Flatmate Pairing Form"></iframe>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -136,7 +154,7 @@
         <h5>Connect</h5>
         <p class="contact-line"><a href="mailto:hello@studentinfox.com">hello@studentinfox.com</a></p>
         <div class="socials">
-          <a href="https://facebook.com/studentinfoxhub" target="_blank" rel="noopener" aria-label="Facebook @studentinfoxhub"><i class="fa-brands fa-facebook"></i></a>
+          <a href="https://www.facebook.com/share/1aLQUynEeV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook @studentinfoxhub"><i class="fa-brands fa-facebook"></i></a>
           <a href="https://instagram.com/studentinfox" target="_blank" rel="noopener" aria-label="Instagram @studentinfox"><i class="fa-brands fa-instagram"></i></a>
           <a href="https://tiktok.com/@studentinfoxhub" target="_blank" rel="noopener" aria-label="TikTok @studentinfoxhub"><i class="fa-brands fa-tiktok"></i></a>
         </div>
@@ -145,6 +163,6 @@
     <div class="footer-bottom">© 2025 Student InfoX Hub. All rights reserved.</div>
   </footer>
 
-  <script src="main.js" defer></script>
+  <script src="main.js?v=3" defer></script>
 </body>
 </html>

@@ -87,4 +87,142 @@
     document.body.classList.add('loaded');
   }, 100);
 
+  // ---------- 4. Tabbed forms (community.html) ----------
+  var tabs = document.querySelectorAll('.form-tab');
+  if (tabs.length) {
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var targetId = tab.getAttribute('data-tab');
+        // Deactivate all
+        tabs.forEach(function (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.form-tab-panel').forEach(function (p) {
+          p.hidden = true;
+          p.classList.remove('active');
+        });
+        // Activate clicked
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        var panel = document.getElementById(targetId);
+        if (panel) {
+          panel.hidden = false;
+          panel.classList.add('active');
+          // Lazy-load iframe on first view
+          var iframe = panel.querySelector('iframe[data-src]');
+          if (iframe) {
+            iframe.src = iframe.getAttribute('data-src');
+            iframe.removeAttribute('data-src');
+          }
+        }
+      });
+    });
+    // Load the first tab's iframe on page load
+    var firstIframe = document.querySelector('.form-tab-panel.active iframe[data-src]');
+    if (firstIframe) {
+      firstIframe.src = firstIframe.getAttribute('data-src');
+      firstIframe.removeAttribute('data-src');
+    }
+  }
+
+  // ---------- 5. Deep-link to tab via hash (e.g. #tab-join) ----------
+  if (location.hash && document.querySelector('.form-tab[data-tab="' + location.hash.slice(1) + '"]')) {
+    var targetTab = document.querySelector('.form-tab[data-tab="' + location.hash.slice(1) + '"]');
+    if (targetTab) targetTab.click();
+    var formsSection = document.getElementById('community-forms');
+    if (formsSection) {
+      setTimeout(function () { formsSection.scrollIntoView({ behavior: 'smooth' }); }, 300);
+    }
+  }
+
+  // ---------- 6. JS-driven marquee scroll (mobile-safe) ----------
+  // On mobile, navigating away kills rAF loops. When the page is
+  // restored from bfcache (back button), loops stay dead.
+  // Fix: track each loop's state and restart on pageshow / visibility.
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var marquees = [];
+
+  if (!reducedMotion) {
+    document.querySelectorAll('.flag-track, .social-track').forEach(function (track) {
+      var state = {
+        track: track,
+        speed: track.classList.contains('flag-track') ? 0.6 : 0.5,
+        pos: 0,
+        halfWidth: track.scrollWidth / 2,
+        paused: false,
+        running: false
+      };
+
+      var parent = track.parentElement;
+      if (parent) {
+        parent.addEventListener('mouseenter', function () { state.paused = true; });
+        parent.addEventListener('mouseleave', function () { state.paused = false; });
+        // Touch devices: pause while touching
+        parent.addEventListener('touchstart', function () { state.paused = true; }, { passive: true });
+        parent.addEventListener('touchend', function () { state.paused = false; }, { passive: true });
+      }
+
+      state.tick = function () {
+        if (!state.paused) {
+          state.pos -= state.speed;
+          if (Math.abs(state.pos) >= state.halfWidth) state.pos = 0;
+          state.track.style.transform = 'translateX(' + state.pos + 'px)';
+        }
+        if (state.running) requestAnimationFrame(state.tick);
+      };
+
+      marquees.push(state);
+    });
+
+    function startAll() {
+      marquees.forEach(function (m) {
+        if (!m.running) {
+          m.running = true;
+          // Recalculate in case layout changed
+          m.halfWidth = m.track.scrollWidth / 2;
+          requestAnimationFrame(m.tick);
+        }
+      });
+    }
+
+    function stopAll() {
+      marquees.forEach(function (m) { m.running = false; });
+    }
+
+    // Start immediately
+    startAll();
+
+    // Mobile bfcache restore (back button) — always restart, not just persisted
+    window.addEventListener('pageshow', function () {
+      stopAll();
+      startAll();
+    });
+
+    // Tab switch / app switch on mobile
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        stopAll();
+        startAll();
+      } else {
+        stopAll();
+      }
+    });
+
+    // Extra safety: window focus
+    window.addEventListener('focus', function () {
+      stopAll();
+      startAll();
+    });
+
+    // Nuclear fallback: heartbeat every 2s checks if loops died and restarts.
+    // On some mobile browsers none of the above events fire reliably.
+    setInterval(function () {
+      if (document.visibilityState === 'visible') {
+        var anyDead = marquees.some(function (m) { return !m.running; });
+        if (anyDead) startAll();
+      }
+    }, 2000);
+  }
+
 })();
