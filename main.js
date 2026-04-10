@@ -163,9 +163,16 @@
         parent.addEventListener('touchend', function () { state.paused = false; }, { passive: true });
       }
 
-      state.tick = function () {
+      state.lastTime = 0;
+      state.tick = function (timestamp) {
+        if (!state.lastTime) state.lastTime = timestamp;
+        var delta = timestamp - state.lastTime;
+        state.lastTime = timestamp;
+        // Cap delta at 50ms (20fps min) so returning from background
+        // doesn't cause a huge jump
+        if (delta > 50) delta = 16;
         if (!state.paused) {
-          state.pos -= state.speed;
+          state.pos -= state.speed * (delta / 16);
           if (Math.abs(state.pos) >= state.halfWidth) state.pos = 0;
           state.track.style.transform = 'translateX(' + state.pos + 'px)';
         }
@@ -179,7 +186,7 @@
       marquees.forEach(function (m) {
         if (!m.running) {
           m.running = true;
-          // Recalculate in case layout changed
+          m.lastTime = 0; // reset so first frame doesn't jump
           m.halfWidth = m.track.scrollWidth / 2;
           requestAnimationFrame(m.tick);
         }
